@@ -1,4 +1,57 @@
-scripts:
-  - name: Install Android SDK Platform 35
-    script: |
-      yes | sdkmanager "platforms;android-35"
+workflows:
+  android-build:
+    name: Android Build Workflow
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      android:
+        # Specify the Android SDK components to install
+        components:
+          - tools
+          - platform-tools
+          - build-tools;35.0.0        # Build Tools version 35
+          - android-35               # Android SDK Platform 35
+          - extras;google;google_play_services
+          - extras;google;m2repository
+          - extras;android;m2repository
+      xcode: none                      # Not needed for Android builds
+      node: none                       # Not needed unless your project uses Node.js
+      cocoapods: none                  # Not needed for Android builds
+      jdk: openjdk11                   # Use OpenJDK 11
+    scripts:
+      # Step 1: Upgrade Gradle Wrapper to a compatible version
+      - name: Upgrade Gradle Wrapper
+        script: |
+          echo "Upgrading Gradle wrapper to version 8.1.1"
+          ./gradlew wrapper --gradle-version 8.1.1 --distribution-type all
+
+      # Step 2: Install Android SDK Platform 35 (if not already installed)
+      - name: Install Android SDK Platform 35
+        script: |
+          echo "Installing Android SDK Platform 35"
+          yes | sdkmanager "platforms;android-35"
+
+      # Step 3: Clean the Flutter project to remove previous build artifacts
+      - name: Clean Flutter Project
+        script: |
+          flutter clean
+
+      # Step 4: Get Flutter dependencies
+      - name: Get Flutter Dependencies
+        script: |
+          flutter pub get
+
+      # Step 5: Build the APK in debug mode
+      - name: Build APK
+        script: |
+          flutter build apk --debug
+
+    artifacts:
+      # Specify the path to the APK to be collected after the build
+      - build/app/outputs/flutter-apk/app-debug.apk
+
+    cache:
+      # Cache the pub cache and Gradle to speed up subsequent builds
+      paths:
+        - ~/.pub-cache
+        - android/.gradle
