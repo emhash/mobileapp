@@ -17,11 +17,7 @@ workflows:
           echo "Installing Android SDK Platform 35"
           yes | sdkmanager "platforms;android-35"
 
-      # Step 3: Clean the Flutter project to remove previous build artifacts
-      - name: Clean Flutter Project
-        script: |
-          flutter clean
-
+     
       # Step 4: Get Flutter dependencies
       - name: Get Flutter Dependencies
         script: |
