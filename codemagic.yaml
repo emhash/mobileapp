@@ -4,20 +4,10 @@ workflows:
     max_build_duration: 60
     environment:
       flutter: stable
-      android:
-        # Specify the Android SDK components to install
-        components:
-          - tools
-          - platform-tools
-          - build-tools;35.0.0        # Build Tools version 35
-          - android-35               # Android SDK Platform 35
-          - extras;google;google_play_services
-          - extras;google;m2repository
-          - extras;android;m2repository
+
       xcode: none                      # Not needed for Android builds
       node: none                       # Not needed unless your project uses Node.js
       cocoapods: none                  # Not needed for Android builds
-      jdk: openjdk11                   # Use OpenJDK 11
     scripts:
       # Step 1: Upgrade Gradle Wrapper to a compatible version
       - name: Upgrade Gradle Wrapper
@@ -50,8 +40,3 @@ workflows:
       # Specify the path to the APK to be collected after the build
       - build/app/outputs/flutter-apk/app-debug.apk
 
-    cache:
-      # Cache the pub cache and Gradle to speed up subsequent builds
-      paths:
-        - ~/.pub-cache
-        - android/.gradle
