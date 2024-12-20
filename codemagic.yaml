@@ -1,0 +1,4 @@
+scripts:
+  - name: Install Android SDK Platform 35
+    script: |
+      yes | sdkmanager "platforms;android-35"
